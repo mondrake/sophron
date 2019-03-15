@@ -1,6 +1,6 @@
 # sophron module routes
 
-uaparser.settings:
+sophron.settings:
   path: '/admin/config/system/sophron'
   defaults:
     _form: '\Drupal\sophron\Form\SettingsForm'

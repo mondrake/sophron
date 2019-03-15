@@ -1,5 +1,5 @@
 type: module
 core: 8.x
-name: sophron
+name: Sophron
 description: 'Integrates FileEye/MimeMap to provide an alternative MIME type extension guesser.'
 configure: sophron.settings
