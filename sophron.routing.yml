@@ -1,9 +1,9 @@
-# ua-parser module routes
+# sophron module routes
 
 uaparser.settings:
-  path: '/admin/config/system/uaparser'
+  path: '/admin/config/system/sophron'
   defaults:
-    _form: '\Drupal\uaparser\Form\SettingsForm'
-    _title: 'ua-parser'
+    _form: '\Drupal\sophron\Form\SettingsForm'
+    _title: 'Sophron'
   requirements:
     _permission: 'administer site configuration'

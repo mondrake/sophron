@@ -1,5 +1,5 @@
-uaparser.settings:
-  title: 'ua-parser'
-  route_name: uaparser.settings
-  description: 'Manage ua-parser settings.'
+sophron.settings:
+  title: 'Sophron'
+  route_name: sophron.settings
+  description: 'Manage MIME type guessing.'
   parent: system.admin_config_system
