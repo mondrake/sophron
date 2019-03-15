@@ -179,7 +179,13 @@ class SettingsForm extends ConfigFormBase {
    */
   protected function buildGuessResultTable($extension) {
     $guess_result = $this->guesser->guess('a.' . $extension);
-    $mimemap_result = (new MimeTypeExtension($extension))->getDefaultType();
+    try {
+      $mimemap_result = (new MimeTypeExtension($extension))->getDefaultType();
+      $enabled_image_formats[$format] = $data['mime_type'];
+    }
+    catch (MimeTypeMappingException $e) {
+      $mimemap_result = '';
+    }
     return [
       '#type' => 'table',
       '#id' => 'sophron-parse-results-table',
