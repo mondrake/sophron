@@ -14,6 +14,9 @@ use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface;
+use FileEye\MimeMap\Extension as MimeTypeExtension;
+use FileEye\MimeMap\Type as MimeType;
+use FileEye\MimeMap\MappingException as MimeTypeMappingException;
 
 /**
  * Main Sophron settings admin form.
@@ -175,7 +178,8 @@ class SettingsForm extends ConfigFormBase {
    *   A table-type render array.
    */
   protected function buildGuessResultTable($extension) {
-    $guess_result = $this->guesser->guess($extension);
+    $guess_result = $this->guesser->guess('a.' . $extension);
+    $mimemap_result = (new MimeTypeExtension($extension))->getDefaultType();
     return [
       '#type' => 'table',
       '#id' => 'sophron-parse-results-table',
@@ -184,6 +188,7 @@ class SettingsForm extends ConfigFormBase {
       ],
       '#rows' => [
         ['MIME Type:', $guess_result],
+        ['MIME map:', $mimemap_result],
       ],
     ];
   }
