@@ -1,1 +1,4 @@
-enable_automatic_updates: FALSE
+map_commands:
+    - [addTypeExtensionMapping, [application/x-trash, '%']]
+    - [addTypeExtensionMapping, [chemical/x-alchemy, alc]]
+    - [addTypeExtensionMapping, [image/x-jg, art]]

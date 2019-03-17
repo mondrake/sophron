@@ -147,6 +147,20 @@ class SettingsForm extends ConfigFormBase {
 
     $form['extensions_table'] = $this->buildExtensionsTable();
 
+    // Image formats map.
+    $form['extra_mapping'] = [
+      '#type' => 'details',
+      '#collapsible' => TRUE,
+      '#open' => TRUE,
+      '#title' => $this->t('Enable/disable image formats'),
+      '#description' => $this->t("Edit the map below to enable/disable image formats. Enabled image file extensions will be determined by the enabled formats, through their MIME types. More information in the module's README.txt"),
+    ];
+    $form['extra_mapping']['map_commands'] = [
+      '#type' => 'textarea',
+      '#rows' => 15,
+      '#default_value' => Yaml::encode($config->get('map_commands')),
+    ];
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -154,8 +168,11 @@ class SettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->config('sophron.settings')
-      ->set('enable_automatic_updates',false)
+    $config = $this->configFactory->getEditable('sophron.settings');
+    $config
+      ->set('map_commands', Yaml::decode($form_state->getValue([
+        'extra_mapping', 'map_commands'
+      ])))
       ->save();
 
     parent::submitForm($form, $form_state);

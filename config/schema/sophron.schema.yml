@@ -2,6 +2,6 @@ sophron.settings:
   type: config_object
   label: 'Sophron settings'
   mapping:
-    enable_automatic_updates:
+    map_commands:
       type: boolean
       label: 'Enable Automatic Updates'
