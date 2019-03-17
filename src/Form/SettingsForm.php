@@ -216,18 +216,21 @@ class SettingsForm extends ConfigFormBase {
     $reflection_mapping->setAccessible(TRUE);
     $mapping = $reflection_mapping->getValue(clone $service);
 
+    $exts = $mapping['extensions'];
+    ksort($exts);
+
     $rows = [];
-    foreach ($mapping['extensions'] as $ext => $mime_id) {
-      $rows[] = [$ext, $this->guesser->guess('a.' . $ext), 'bong'];
+    foreach ($exts as $ext => $mime_id) {
+      $d_guess = $this->guesser->guess('a.' . $ext);
+      try {
+        $m_guess = (new MimeTypeExtension($ext))->getDefaultType();
+      }
+      catch (MimeTypeMappingException $e) {
+        $m_guess = '';
+      }
+      $rows[] = [$ext, $d_guess, $m_guess, $d_guess != $m_guess ? '*** diff' : ''];
     }
-/*    $guess_result = $this->guesser->guess('a.' . $extension);
-    try {
-      $mimemap_result = (new MimeTypeExtension($extension))->getDefaultType();
-      $enabled_image_formats[$format] = $data['mime_type'];
-    }
-    catch (MimeTypeMappingException $e) {
-      $mimemap_result = '';
-    }*/
+
     return [
       '#type' => 'table',
       '#id' => 'sophron-extensions-table',
