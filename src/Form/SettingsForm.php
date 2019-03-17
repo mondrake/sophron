@@ -111,16 +111,18 @@ class SettingsForm extends ConfigFormBase {
     $config = $this->config('sophron.settings');
 
     // Map handling.
+    $err = [];
     $map_commands = $config->get('map_commands');
     $map = MapHandler::map();
     foreach ($map_commands as $command) {
         try {
             call_user_func_array([$map, $command[0]], $command[1]);
         } catch (MimeTypeMappingException $e) {
-            // Do nothing?
+            $err[] = $e->getMessage();
         }
     }
     $map->sort();
+    drupal_set_message(implode(' ', $err), 'status');
 
 
 
