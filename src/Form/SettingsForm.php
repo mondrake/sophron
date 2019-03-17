@@ -159,7 +159,7 @@ class SettingsForm extends ConfigFormBase {
     $form['extra_mapping']['map_commands'] = [
       '#type' => 'textarea',
       '#rows' => 15,
-      '#default_value' => Yaml::dump($config->get('map_commands')),
+      '#default_value' => Yaml::dump($config->get('map_commands'), 1),
     ];
 
     return parent::buildForm($form, $form_state);
