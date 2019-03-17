@@ -122,7 +122,7 @@ class SettingsForm extends ConfigFormBase {
         }
     }
     $map->sort();
-    drupal_set_message(implode(' ', $err), 'status');
+    drupal_set_message(implode('<br/>', $err), 'status');
 
 
 
