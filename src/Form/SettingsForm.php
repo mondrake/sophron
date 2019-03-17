@@ -192,9 +192,9 @@ class SettingsForm extends ConfigFormBase {
       ])))
       ->save();
 */
-    drupal_set_message(var_export(Yaml::parse($form_state->getValue([
+    drupal_set_message(var_export($form_state->getValue([
       'extra_mapping', 'map_commands'
-    ]))), 'status');
+    ])), 'status');
     parent::submitForm($form, $form_state);
   }
 
