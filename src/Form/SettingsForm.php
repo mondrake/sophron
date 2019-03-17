@@ -145,6 +145,8 @@ class SettingsForm extends ConfigFormBase {
     ];
     $form['lookup']['table'] = $this->buildGuessResultTable($ua);
 
+    $form['extensions_table'] = $this->buildExtensionsTable();
+
     return parent::buildForm($form, $form_state);
   }
 
@@ -196,6 +198,43 @@ class SettingsForm extends ConfigFormBase {
         ['MIME Type:', $guess_result],
         ['MIME map:', $mimemap_result],
       ],
+    ];
+  }
+
+  protected function buildExtensionsTable() {
+    // Guess a fake file name just to ensure the guesser loads any mapping
+    // alteration through the hooks.
+    $this->guesser->guess('fake.png');
+        // Use Reflection to get a copy of the protected $mapping property in the
+    // guesser class. Get the proxied service first, then the actual mapping.
+    $reflection = new \ReflectionObject($this->guesser);
+    $proxied_service = $reflection->getProperty('service');
+    $proxied_service->setAccessible(TRUE);
+    $service = $proxied_service->getValue(clone $this->guesser);
+    $reflection = new \ReflectionObject($service);
+    $reflection_mapping = $reflection->getProperty('mapping');
+    $reflection_mapping->setAccessible(TRUE);
+    $mapping = $reflection_mapping->getValue(clone $service);
+
+    $rows = [];
+    foreach ($mapping['extensions'] as $ext => $mime_id) {
+      $rows[] = [$ext, $this->guesser->guess('a.' . $ext), 'bong'];
+    }
+/*    $guess_result = $this->guesser->guess('a.' . $extension);
+    try {
+      $mimemap_result = (new MimeTypeExtension($extension))->getDefaultType();
+      $enabled_image_formats[$format] = $data['mime_type'];
+    }
+    catch (MimeTypeMappingException $e) {
+      $mimemap_result = '';
+    }*/
+    return [
+      '#type' => 'table',
+      '#id' => 'sophron-extensions-table',
+      '#header' => [
+        ['data' => $this->t('Extension')],
+      ],
+      '#rows' => $rows,
     ];
   }
 
