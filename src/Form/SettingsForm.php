@@ -181,22 +181,19 @@ class SettingsForm extends ConfigFormBase {
     return parent::buildForm($form, $form_state);
   }
 
-  public function validateForm(array &$form, FormStateInterface $form_state) {
+/*  public function validateForm(array &$form, FormStateInterface $form_state) {
     $form_state->setErrorByName('extra_mapping][map_commands', var_export(Yaml::parse($form_state->getValue('map_commands')), TRUE));
-  }
+  }*/
 
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-/*    $config = $this->configFactory->getEditable('sophron.settings');
+    $config = $this->configFactory->getEditable('sophron.settings');
     $config
-      ->set('map_commands', Yaml::parse($form_state->getValue([
-        'extra_mapping', 'map_commands'
-      ])))
+      ->set('map_commands', Yaml::parse($form_state->getValue('map_commands'])))
       ->save();
-*/
-    drupal_set_message(var_export($form_state->getValues()), 'warning');
+
     parent::submitForm($form, $form_state);
   }
 
