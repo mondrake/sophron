@@ -160,7 +160,7 @@ class SettingsForm extends ConfigFormBase {
       '#name' => 'do_lookup',
       '#ajax'  => ['callback' => [$this, 'processAjaxLookup']],
     ];
-    $form['lookup']['table'] = $this->buildGuessResultTable($ua);
+    $form['lookup']['table'] = $this->buildGuessResultTable($extension);
 
     $form['extensions_table'] = $this->buildExtensionsTable();
 
@@ -191,7 +191,7 @@ class SettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->configFactory->getEditable('sophron.settings');
     $config
-      ->set('map_commands', Yaml::parse($form_state->getValue('map_commands'])))
+      ->set('map_commands', Yaml::parse($form_state->getValue('map_commands')))
       ->save();
 
     parent::submitForm($form, $form_state);
