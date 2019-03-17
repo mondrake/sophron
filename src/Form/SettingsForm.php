@@ -185,9 +185,12 @@ class SettingsForm extends ConfigFormBase {
       $ext = new MimeTypeExtension($extension);
       $default_type = $ext->getDefaultType();
       $mimemap_result = implode(', ', $ext->getTypes());
+      $type = new MimeType($default_type);
+      $mimemap_aliases = implode(', ', $type->getAliases());
     }
     catch (MimeTypeMappingException $e) {
       $mimemap_result = '';
+      $mimemap_aliases = '';
     }
     return [
       '#type' => 'table',
@@ -198,6 +201,7 @@ class SettingsForm extends ConfigFormBase {
       '#rows' => [
         ['MIME Type:', $guess_result],
         ['MIME map:', $mimemap_result],
+        ['MIME aliases:', $mimemap_aliases],
       ],
     ];
   }
