@@ -123,7 +123,7 @@ class SettingsForm extends ConfigFormBase {
         }
     }
     $map->sort();
-    drupal_set_message(new FormattableMarkup("<pre>" . implode('<br/>', $err) . "</pre>"), 'status');
+    drupal_set_message(new FormattableMarkup("<pre>" . implode('<br/>', $err) . "</pre>", []), 'status');
 
 
 
@@ -273,17 +273,20 @@ class SettingsForm extends ConfigFormBase {
         $m_guess = '';
       }
 
+      $xtype_aliases = '';
       if ($m_guess === '') {
         $dd = '+++ MISS';
       }
       elseif (mb_strtolower($d_guess) != mb_strtolower($m_guess)) {
         $dd = '*** diff';
+        $xtype = new MimeType($m_guess);
+        $xtype_aliases = implode(', ', $xtype->getAliases);
       }
       else {
         $dd = '';
       }
 
-      $rows[] = [$ext, $d_guess, $m_guess,  $dd];
+      $rows[] = [$ext, $d_guess, $m_guess,  $dd, $xtype_aliases];
     }
 
     return [
