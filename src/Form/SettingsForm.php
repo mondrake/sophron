@@ -2,6 +2,7 @@
 
 namespace Drupal\sophron\Form;
 
+use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Config\ConfigFactoryInterface;
