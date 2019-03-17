@@ -182,7 +182,7 @@ class SettingsForm extends ConfigFormBase {
   }
 
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    $form_state->setErrorByName('extra_mapping][map_commands', var_export($form_state->getValue('map_commands'), TRUE));
+    $form_state->setErrorByName('extra_mapping][map_commands', var_export(Yaml::parse($form_state->getValue('map_commands')), TRUE));
   }
 
   /**
