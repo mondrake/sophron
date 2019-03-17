@@ -18,6 +18,7 @@ use Symfony\Component\Yaml\Yaml;
 use FileEye\MimeMap\Extension as MimeTypeExtension;
 use FileEye\MimeMap\Type as MimeType;
 use FileEye\MimeMap\MappingException as MimeTypeMappingException;
+use FileEye\MimeMap\MapHandler;
 
 /**
  * Main Sophron settings admin form.
@@ -108,6 +109,21 @@ class SettingsForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('sophron.settings');
+
+    // Map handling.
+    $map_commands = $config->get('map_commands');
+    $map = MapHandler::map();
+    foreach ($map_commands as $command) {
+        try {
+            call_user_func_array([$map, $command[0]], $command[1]);
+        } catch (MimeTypeMappingException $e) {
+            // Do nothing?
+        }
+    }
+    $map->sort();
+
+
+
     $form = [];
 
     $extension = 'jpeg';
