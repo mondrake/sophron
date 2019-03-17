@@ -182,8 +182,9 @@ class SettingsForm extends ConfigFormBase {
   protected function buildGuessResultTable($extension) {
     $guess_result = $this->guesser->guess('a.' . $extension);
     try {
-      $mimemap_result = (new MimeTypeExtension($extension))->getDefaultType();
-      $enabled_image_formats[$format] = $data['mime_type'];
+      $ext = new MimeTypeExtension($extension);
+      $default_type = $ext->getDefaultType();
+      $mimemap_result = implode(', ', $ext->getTypes());
     }
     catch (MimeTypeMappingException $e) {
       $mimemap_result = '';
@@ -228,7 +229,18 @@ class SettingsForm extends ConfigFormBase {
       catch (MimeTypeMappingException $e) {
         $m_guess = '';
       }
-      $rows[] = [$ext, $d_guess, $m_guess, $d_guess != $m_guess ? '*** diff' : ''];
+
+      if ($m_guess === '') {
+        $dd = '+++ MISS';
+      }
+      elseif (mb_strtolower($d_guess) != mb_strtolower($m_guess)) {
+        $dd = '*** diff';
+      }
+      else {
+        $dd = '';
+      }
+
+      $rows[] = [$ext, $d_guess, $m_guess,  $dd];
     }
 
     return [
