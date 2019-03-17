@@ -3,5 +3,4 @@ sophron.settings:
   label: 'Sophron settings'
   mapping:
     map_commands:
-      type: boolean
-      label: 'Enable Automatic Updates'
+      type: sequence
