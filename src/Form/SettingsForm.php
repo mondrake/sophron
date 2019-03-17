@@ -181,6 +181,12 @@ class SettingsForm extends ConfigFormBase {
     return parent::buildForm($form, $form_state);
   }
 
+  public function validateForm(array &$form, FormStateInterface $form_state) {
+    $form_state->setErrorByName('extra_mapping][map_commands', var_export($form_state->getValue([
+      'extra_mapping', 'map_commands'
+    ])));
+  }
+
   /**
    * {@inheritdoc}
    */
