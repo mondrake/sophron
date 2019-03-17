@@ -123,7 +123,7 @@ class SettingsForm extends ConfigFormBase {
         }
     }
     $map->sort();
-    drupal_set_message(new FormattableMarkup("<pre>" . implode('<br/>', $err) . "</pre>", 'status');
+    drupal_set_message(new FormattableMarkup("<pre>" . implode('<br/>', $err) . "</pre>"), 'status');
 
 
 
