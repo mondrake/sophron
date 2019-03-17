@@ -280,7 +280,7 @@ class SettingsForm extends ConfigFormBase {
       elseif (mb_strtolower($d_guess) != mb_strtolower($m_guess)) {
         $dd = '*** diff';
         $xtype = new MimeType($m_guess);
-        $xtype_aliases = implode(', ', $xtype->getAliases);
+        $xtype_aliases = implode(', ', $xtype->getAliases());
       }
       else {
         $dd = '';
