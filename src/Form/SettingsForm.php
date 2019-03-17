@@ -185,13 +185,16 @@ class SettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $config = $this->configFactory->getEditable('sophron.settings');
+/*    $config = $this->configFactory->getEditable('sophron.settings');
     $config
       ->set('map_commands', Yaml::parse($form_state->getValue([
         'extra_mapping', 'map_commands'
       ])))
       ->save();
-
+*/
+    drupal_set_message(var_export(Yaml::parse($form_state->getValue([
+      'extra_mapping', 'map_commands'
+    ]))), 'status');
     parent::submitForm($form, $form_state);
   }
 
