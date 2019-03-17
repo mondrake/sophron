@@ -2,6 +2,7 @@
 
 namespace Drupal\sophron\Form;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -122,7 +123,7 @@ class SettingsForm extends ConfigFormBase {
         }
     }
     $map->sort();
-    drupal_set_message(implode('<br/>', $err), 'status');
+    drupal_set_message(new FormattableMarkup("<pre>" . implode('<br/>', $err) . "</pre>", 'status');
 
 
 
