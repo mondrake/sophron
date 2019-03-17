@@ -2,7 +2,6 @@
 
 namespace Drupal\sophron\Form;
 
-use Drupal\Component\Serialization\Yaml;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -15,6 +14,7 @@ use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface;
+use Symfony\Component\Yaml\Yaml;
 use FileEye\MimeMap\Extension as MimeTypeExtension;
 use FileEye\MimeMap\Type as MimeType;
 use FileEye\MimeMap\MappingException as MimeTypeMappingException;
@@ -159,7 +159,7 @@ class SettingsForm extends ConfigFormBase {
     $form['extra_mapping']['map_commands'] = [
       '#type' => 'textarea',
       '#rows' => 15,
-      '#default_value' => Yaml::encode($config->get('map_commands')),
+      '#default_value' => Yaml::dump($config->get('map_commands')),
     ];
 
     return parent::buildForm($form, $form_state);
@@ -171,7 +171,7 @@ class SettingsForm extends ConfigFormBase {
   public function submitForm(array &$form, FormStateInterface $form_state) {
     $config = $this->configFactory->getEditable('sophron.settings');
     $config
-      ->set('map_commands', Yaml::decode($form_state->getValue([
+      ->set('map_commands', Yaml::parse($form_state->getValue([
         'extra_mapping', 'map_commands'
       ])))
       ->save();
