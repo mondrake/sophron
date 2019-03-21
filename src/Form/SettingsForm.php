@@ -115,7 +115,9 @@ class SettingsForm extends ConfigFormBase {
     // Map handling.
     $err = [];
     $map_commands = $config->get('map_commands');
-    $map = MapHandler::map(DrupalMap::class);
+    //$map = MapHandler::map(DrupalMap::class);
+    MapHandler::setDefaultMapClass(DrupalMap::class); // @todo NO, the class should be handled by the service!!!
+    $map = MapHandler::map();
     foreach ($map_commands as $command) {
         try {
             call_user_func_array([$map, $command[0]], $command[1]);
