@@ -2,6 +2,8 @@
 
 namespace Drupal\sophron\Map;
 
+use FileEye\MimeMap\Map\AbstractMap;
+
 /**
  * Class for mapping file extensions to MIME types.
  *
