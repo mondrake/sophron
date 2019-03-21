@@ -20,6 +20,7 @@ use FileEye\MimeMap\Extension as MimeTypeExtension;
 use FileEye\MimeMap\Type as MimeType;
 use FileEye\MimeMap\MappingException as MimeTypeMappingException;
 use FileEye\MimeMap\MapHandler;
+use Drupal\sophron\Map\DrupalMap;
 
 /**
  * Main Sophron settings admin form.
@@ -114,7 +115,7 @@ class SettingsForm extends ConfigFormBase {
     // Map handling.
     $err = [];
     $map_commands = $config->get('map_commands');
-    $map = MapHandler::map();
+    $map = MapHandler::map(DrupalMap::class);
     foreach ($map_commands as $command) {
         try {
             call_user_func_array([$map, $command[0]], $command[1]);
