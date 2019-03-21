@@ -2,6 +2,7 @@
 
 namespace Drupal\sophron\Form;
 
+use Drupal\Component\Render\FormattableMarkup;
 use Drupal\Core\Ajax\AjaxResponse;
 use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Config\ConfigFactoryInterface;
@@ -14,9 +15,11 @@ use Drupal\Core\Url;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\HttpFoundation\RequestStack;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface;
+use Symfony\Component\Yaml\Yaml;
 use FileEye\MimeMap\Extension as MimeTypeExtension;
 use FileEye\MimeMap\Type as MimeType;
 use FileEye\MimeMap\MappingException as MimeTypeMappingException;
+use FileEye\MimeMap\MapHandler;
 
 /**
  * Main Sophron settings admin form.
@@ -107,6 +110,23 @@ class SettingsForm extends ConfigFormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
     $config = $this->config('sophron.settings');
+
+    // Map handling.
+    $err = [];
+    $map_commands = $config->get('map_commands');
+    $map = MapHandler::map();
+    foreach ($map_commands as $command) {
+        try {
+            call_user_func_array([$map, $command[0]], $command[1]);
+        } catch (MimeTypeMappingException $e) {
+            $err[] = $e->getMessage();
+        }
+    }
+    $map->sort();
+    drupal_set_message(new FormattableMarkup("<pre>" . implode('<br/>', $err) . "</pre>", []), 'status');
+
+
+
     $form = [];
 
     $extension = 'jpeg';
@@ -143,17 +163,38 @@ class SettingsForm extends ConfigFormBase {
       '#name' => 'do_lookup',
       '#ajax'  => ['callback' => [$this, 'processAjaxLookup']],
     ];
-    $form['lookup']['table'] = $this->buildGuessResultTable($ua);
+    $form['lookup']['table'] = $this->buildGuessResultTable($extension);
+
+    $form['extensions_table'] = $this->buildExtensionsTable();
+
+    // Image formats map.
+    $form['extra_mapping'] = [
+      '#type' => 'details',
+      '#collapsible' => TRUE,
+      '#open' => TRUE,
+      '#title' => $this->t('Enable/disable image formats'),
+      '#description' => $this->t("Edit the map below to enable/disable image formats. Enabled image file extensions will be determined by the enabled formats, through their MIME types. More information in the module's README.txt"),
+    ];
+    $form['extra_mapping']['map_commands'] = [
+      '#type' => 'textarea',
+      '#rows' => 15,
+      '#default_value' => Yaml::dump($config->get('map_commands'), 1),
+    ];
 
     return parent::buildForm($form, $form_state);
   }
+
+/*  public function validateForm(array &$form, FormStateInterface $form_state) {
+    $form_state->setErrorByName('extra_mapping][map_commands', var_export(Yaml::parse($form_state->getValue('map_commands')), TRUE));
+  }*/
 
   /**
    * {@inheritdoc}
    */
   public function submitForm(array &$form, FormStateInterface $form_state) {
-    $this->config('sophron.settings')
-      ->set('enable_automatic_updates',false)
+    $config = $this->configFactory->getEditable('sophron.settings');
+    $config
+      ->set('map_commands', Yaml::parse($form_state->getValue('map_commands')))
       ->save();
 
     parent::submitForm($form, $form_state);
@@ -180,11 +221,15 @@ class SettingsForm extends ConfigFormBase {
   protected function buildGuessResultTable($extension) {
     $guess_result = $this->guesser->guess('a.' . $extension);
     try {
-      $mimemap_result = (new MimeTypeExtension($extension))->getDefaultType();
-      $enabled_image_formats[$format] = $data['mime_type'];
+      $ext = new MimeTypeExtension($extension);
+      $default_type = $ext->getDefaultType();
+      $mimemap_result = implode(', ', $ext->getTypes());
+      $type = new MimeType($default_type);
+      $mimemap_aliases = implode(', ', $type->getAliases());
     }
     catch (MimeTypeMappingException $e) {
       $mimemap_result = '';
+      $mimemap_aliases = '';
     }
     return [
       '#type' => 'table',
@@ -195,7 +240,62 @@ class SettingsForm extends ConfigFormBase {
       '#rows' => [
         ['MIME Type:', $guess_result],
         ['MIME map:', $mimemap_result],
+        ['MIME aliases:', $mimemap_aliases],
       ],
+    ];
+  }
+
+  protected function buildExtensionsTable() {
+    // Guess a fake file name just to ensure the guesser loads any mapping
+    // alteration through the hooks.
+    $this->guesser->guess('fake.png');
+        // Use Reflection to get a copy of the protected $mapping property in the
+    // guesser class. Get the proxied service first, then the actual mapping.
+    $reflection = new \ReflectionObject($this->guesser);
+    $proxied_service = $reflection->getProperty('service');
+    $proxied_service->setAccessible(TRUE);
+    $service = $proxied_service->getValue(clone $this->guesser);
+    $reflection = new \ReflectionObject($service);
+    $reflection_mapping = $reflection->getProperty('mapping');
+    $reflection_mapping->setAccessible(TRUE);
+    $mapping = $reflection_mapping->getValue(clone $service);
+
+    $exts = $mapping['extensions'];
+    ksort($exts);
+
+    $rows = [];
+    foreach ($exts as $ext => $mime_id) {
+      $d_guess = $this->guesser->guess('a.' . $ext);
+      try {
+        $m_guess = (new MimeTypeExtension($ext))->getDefaultType();
+      }
+      catch (MimeTypeMappingException $e) {
+        $m_guess = '';
+      }
+
+      $xtype_aliases = '';
+      if ($m_guess === '') {
+        $dd = '+++ MISS';
+      }
+      elseif (mb_strtolower($d_guess) != mb_strtolower($m_guess)) {
+        $dd = '*** diff';
+        $xtype = new MimeType($m_guess);
+        $xtype_aliases = implode(', ', $xtype->getAliases());
+      }
+      else {
+        $dd = '';
+      }
+
+      $rows[] = [$ext, $d_guess, $m_guess,  $dd, $xtype_aliases];
+    }
+
+    return [
+      '#type' => 'table',
+      '#id' => 'sophron-extensions-table',
+      '#header' => [
+        ['data' => $this->t('Extension')],
+      ],
+      '#rows' => $rows,
     ];
   }
 
