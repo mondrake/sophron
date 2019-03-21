@@ -3,6 +3,6 @@
     "type": "drupal-module",
     "description": "Integrates FileEye/MimeMap to provide an alternative MIME type extension guesser.",
     "require": {
-        "fileeye/mimemap": "^1"
+        "fileeye/mimemap": "*"
     }
 }
