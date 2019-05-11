@@ -9,8 +9,6 @@ use FileEye\MimeMap\MalformedTypeException;
 use FileEye\MimeMap\MappingException;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
-use Drupal\Component\Render\FormattableMarkup;
-
 /**
  * Sophron's module Event Subscriber.
  */
@@ -50,6 +48,9 @@ class SophronEventSubscriber implements EventSubscriberInterface {
     ];
   }
 
+  /**
+   * @todo
+   */
   public function initializeMap(MapEvent $event) {
     // Run additional commands mapping only for PHP 7+. This is because running
     // the mapping routine for lower version expose the module to fatal error

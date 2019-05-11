@@ -2,30 +2,24 @@
 
 namespace Drupal\sophron\Form;
 
-use Drupal\Component\Render\FormattableMarkup;
-use Drupal\Core\Ajax\AjaxResponse;
-use Drupal\Core\Ajax\ReplaceCommand;
 use Drupal\Core\Config\ConfigFactoryInterface;
-use Drupal\Core\Datetime\DateFormatterInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Link;
-use Drupal\Core\State\StateInterface;
-use Drupal\Core\Url;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\HttpFoundation\RequestStack;
-use Symfony\Component\Yaml\Yaml;
 use Drupal\sophron\MimeMapManager;
 use Drupal\sophron\CoreExtensionMimeTypeGuesserExtended;
 use Drupal\sophron\Map\DrupalMap;
 use FileEye\MimeMap\Map\DefaultMap;
-use FileEye\MimeMap\MappingException;
+use Symfony\Component\DependencyInjection\ContainerInterface;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Main Sophron settings admin form.
  */
 class SettingsForm extends ConfigFormBase {
 
+  /**
+   * @todo
+   */
   protected $mimeMapManager;
 
   /**
@@ -160,7 +154,7 @@ class SettingsForm extends ConfigFormBase {
         '#id' => 'sophron-mapping-gaps-table',
         '#header' => [
           ['data' => $this->t('File extension')],
-          ['data' => $this->t('Drupal core\'s MIME type')],
+          ['data' => $this->t('Drupal core MIME type')],
           ['data' => $this->t('Gap')],
         ],
         '#rows' => $gaps,
@@ -274,7 +268,7 @@ class SettingsForm extends ConfigFormBase {
    *
    * @param string $map_class
    *   @todo ADD IT!
-   *\
+   *
    * @return array
    *   A table-type render array.
    */

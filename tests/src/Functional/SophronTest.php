@@ -29,20 +29,19 @@ class SophronTest extends BrowserTestBase {
    * Test settings form.
    */
   public function testFormAndSettings() {
-    $config = \Drupal::config('sophron.settings');
-
     // The default map has been set by install.
-    $this->assertEquals('Drupal\sophron\Map\DrupalMap', $config->get('map_class'));
+    $this->assertEquals('Drupal\sophron\Map\DrupalMap', \Drupal::configFactory()->get('sophron.settings')->get('map_class'));
 
-    // Loading the form, the regexes.php file is created.
+    // Load the form, and change the default map class.
     $this->drupalGet($this->sophronAdmin);
     $edit = [
       'map_class' => 'FileEye\MimeMap\Map\DefaultMap',
     ];
     $this->drupalPostForm(NULL, $edit, 'Save configuration');
 
-    // FileEye map has been set as default.
-    $this->assertEquals('FileEye\MimeMap\Map\DefaultMap', $config->get('map_class'));
+    // FileEye map has been set as default, and gaps exists.
+    $this->assertSession()->responseContains('Mapping gaps');
+    $this->assertEquals('FileEye\MimeMap\Map\DefaultMap', \Drupal::configFactory()->get('sophron.settings')->get('map_class'));
   }
 
 }

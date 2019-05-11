@@ -54,6 +54,9 @@ class MimeMapManager {
     $this->eventDispatcher = $dispatcher;
   }
 
+  /**
+   * @todo
+   */
   public function getMapClass() {
     if (!$this->currentMapClass) {
       $this->setMapClass($this->sophronSettings->get('map_class'));
@@ -61,6 +64,9 @@ class MimeMapManager {
     return $this->currentMapClass;
   }
 
+  /**
+   * @todo
+   */
   public function setMapClass($map_class) {
     $this->currentMapClass = $map_class;
     if (!isset($this->initializedMapClasses[$map_class])) {
@@ -71,37 +77,53 @@ class MimeMapManager {
     return $this;
   }
 
+  /**
+   * @todo
+   */
   public function getMappingErrors($map_class) {
     $this->setMapClass($map_class);
     return isset($this->initializedMapClasses[$map_class]) ? $this->initializedMapClasses[$map_class] : [];
   }
 
+  /**
+   * @todo
+   */
   public function listTypes() {
     return MapHandler::map($this->getMapClass())->listTypes();
   }
 
+  /**
+   * @todo
+   */
   public function getType($type) {
     try {
       return new Type($type, $this->getMapClass());
     }
     catch (MalformedTypeException $e) {
-      return null;
+      return NULL;
     }
     catch (MappingException $e) {
-      return null;
+      return NULL;
     }
   }
 
+  /**
+   * @todo
+   */
   public function listExtensions() {
     return MapHandler::map($this->getMapClass())->listExtensions();
   }
 
+  /**
+   * @todo
+   */
   public function getExtension($extension) {
     try {
       return new Extension($extension, $this->getMapClass());
     }
     catch (MappingException $e) {
-      return null;
+      return NULL;
     }
   }
+
 }

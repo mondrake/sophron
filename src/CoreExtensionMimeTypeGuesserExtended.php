@@ -16,17 +16,23 @@ class CoreExtensionMimeTypeGuesserExtended extends ExtensionMimeTypeGuesser {
     $this->moduleHandler = \Drupal::service('module_handler');
   }
 
-  // @todo
+  /**
+   * @todo
+   */
   public function listTypes() {
     return $this->getMapping()['mimetypes'];
   }
 
-  // @todo
+  /**
+   * @todo
+   */
   public function listExtensions() {
     return array_keys($this->getMapping()['extensions']);
   }
 
-  // @todo
+  /**
+   * @todo
+   */
   protected function getMapping() {
     if ($this->mapping === NULL) {
       $mapping = $this->defaultMapping;
