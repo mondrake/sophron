@@ -12,7 +12,6 @@ use Drupal\Tests\BrowserTestBase;
 class SophronTest extends BrowserTestBase {
 
   protected $sophronAdmin = 'admin/config/system/sophron';
-  protected $parser;
 
   public static $modules = ['sophron'];
 
@@ -21,7 +20,6 @@ class SophronTest extends BrowserTestBase {
    */
   public function setUp() {
     parent::setUp();
-    $this->parser = $this->container->get('uaparser');
     $this->drupalLogin($this->drupalCreateUser([
       'administer site configuration',
     ]));

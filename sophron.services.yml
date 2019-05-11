@@ -2,7 +2,7 @@ services:
   sophron.mime_map.manager:
     class: Drupal\sophron\MimeMapManager
     arguments: ['@config.factory', '@event_dispatcher']
-  sopphron.event_subscriber:
+  sophron.event_subscriber:
     class: Drupal\sophron\EventSubscriber\SophronEventSubscriber
     arguments: ['@config.factory']
     tags:
