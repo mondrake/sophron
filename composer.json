@@ -1,13 +1,14 @@
 {
     "name": "drupal/sophron",
     "type": "drupal-module",
-    "description": "Integrates FileEye/MimeMap to provide an alternative MIME type extension guesser.",
+    "description": "Provides an extensive MIME types management API",
     "require": {
-        "fileeye/mimemap": "*"
+        "php": ">=7",
+        "fileeye/mimemap": "^1.1.1"
     },
     "autoload": {
         "psr-4": {
-            "Drupal\\sophron\\Map\\": "src/Map/"
+            "Drupal\\sophron\\": "src/"
         }
     }
 }

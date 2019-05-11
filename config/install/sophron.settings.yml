@@ -1,1 +1,2 @@
+map_class: Drupal\sophron\Map\DrupalMap
 map_commands: {}

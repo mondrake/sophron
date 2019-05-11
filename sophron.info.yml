@@ -1,5 +1,6 @@
 type: module
 core: 8.x
+php: 7
 name: Sophron
-description: 'Integrates FileEye/MimeMap to provide an alternative MIME type extension guesser.'
+description: 'Provides an extensive MIME types management API.'
 configure: sophron.settings

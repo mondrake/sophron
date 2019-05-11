@@ -1,20 +1,20 @@
 <?php
 
-namespace Drupal\Tests\uaparser\Functional;
+namespace Drupal\Tests\sophron\Functional;
 
 use Drupal\Tests\BrowserTestBase;
 
 /**
- * Tests ua-parser functionality.
+ * Tests Sophron functionality.
  *
- * @group ua-parser
+ * @group sophron
  */
-class UaparserTest extends BrowserTestBase {
+class SophronTest extends BrowserTestBase {
 
-  protected $uaParserAdmin = 'admin/config/system/uaparser';
+  protected $sophronAdmin = 'admin/config/system/sophron';
   protected $parser;
 
-  public static $modules = ['uaparser'];
+  public static $modules = ['sophron'];
 
   /**
    * {@inheritdoc}
@@ -28,62 +28,23 @@ class UaparserTest extends BrowserTestBase {
   }
 
   /**
-   * Tests ua-parser functionality.
-   */
-  public function testUaParser() {
-
-    $ua = "Mozilla/5.0 (Windows NT 6.3; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/49.0.2623.110 Safari/537.36";
-
-    // Check both client and parser time are returned.
-    $res = $this->parser->parse($ua);
-    $this->assertTrue(isset($res['client']));
-    $this->assertTrue(isset($res['time']));
-
-    // After caching, check only client info is returned.
-    $res = $this->parser->parse($ua);
-    $this->assertTrue(isset($res['client']));
-    $this->assertFalse(isset($res['time']));
-
-    // Remove regexes.php forcing an update, both client and parser time are
-    // returned.
-    file_unmanaged_delete_recursive(\Drupal::config('uaparser.settings')->get('regexes_file_location'));
-    $ua = "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.95 Safari/537.36";
-    $res = $this->parser->parse($ua);
-    $this->assertTrue(isset($res['client']));
-    $this->assertTrue(isset($res['time']));
-  }
-
-  /**
    * Test settings form.
    */
   public function testFormAndSettings() {
-    $regexes_dir = \Drupal::config('uaparser.settings')->get('regexes_file_location');
+    $config = \Drupal::config('sophron.settings');
 
-    // The default regexes directory has been created by install.
-    $this->assertTrue(is_dir($regexes_dir));
-    $files_count = count(file_scan_directory($regexes_dir, '/.*/'));
-    $this->assertEqual(0, $files_count);
+    // The default map has been set by install.
+    $this->assertEquals('Drupal\sophron\Map\DrupalMap', $config->get('map_class'));
 
     // Loading the form, the regexes.php file is created.
-    $this->drupalGet($this->uaParserAdmin);
-    $this->assertTrue(is_dir($regexes_dir));
-    $files_count = count(file_scan_directory($regexes_dir, '/.*/'));
-    $this->assertEqual(1, $files_count);
-
-    // Change the regexes directory.
-    $new_regexes_dir = 'public://test_uaparser';
-    file_prepare_directory($new_regexes_dir, FILE_CREATE_DIRECTORY);
+    $this->drupalGet($this->sophronAdmin);
     $edit = [
-      'regexes_file_location' => $new_regexes_dir,
+      'map_class' => 'FileEye\MimeMap\Map\DefaultMap',
     ];
     $this->drupalPostForm(NULL, $edit, 'Save configuration');
 
-    // The new regexes directory is created, and config is updated
-    // accordingly.
-    $this->assertEqual($new_regexes_dir, \Drupal::config('uaparser.settings')->get('regexes_file_location'));
-    $this->assertTrue(is_dir($new_regexes_dir));
-    $files_count = count(file_scan_directory($new_regexes_dir, '/.*/'));
-    $this->assertEqual(1, $files_count);
+    // FileEye map has been set as default.
+    $this->assertEquals('FileEye\MimeMap\Map\DefaultMap', $config->get('map_class'));
   }
 
 }

@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Sophron - An alternative MIME type extension guesser.
+ * Sophron - MIME types management API.
  */
 
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -14,8 +14,7 @@ function sophron_help($route_name, RouteMatchInterface $route_match) {
   switch ($route_name) {
     case 'sophron.settings':
       $output = '';
-      $output .= '<p>' . t('<strong>ua-parser</strong> is an open-source and community-driven, regexp-based user-agent parser. For more information, visit <a href=":uaparser_url">uaparser.org</a>.', [':uaparser_url' => 'http://www.uaparser.org/']) . '</p>';
-      $output .= '<p>' . t('The Drupal ua-parser module integrates Drupal with the <a href=":uap-php_url">ua-parser/uap-php</a> library; the module configuration allows to update manually the user-agent definitions file from the latest version in the <a href=":uap-core_url">ua-parser/uap-core</a> repository, or to schedule automatic updates.', [':uap-php_url' => 'https://github.com/ua-parser/uap-php', ':uap-core_url' => 'https://github.com/ua-parser/uap-core']) . '</p>';
+      $output .= '<p>' . t('<strong>Sophron</strong> provides an extensive MIME types management API, enhancing Drupal core capabilities. It integrates with the <a href=":mimemap_url">FileEye/MimeMap</a> PHP library.', [':mimemap_url' => 'https://github.com/FileEye/MimeMap/']) . '</p>';
       return $output;
 
   }

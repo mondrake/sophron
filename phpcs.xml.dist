@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ruleset name="sophron">
-  <description>PHP CodeSniffer configuration for sophron module.</description>
+  <description>PHP CodeSniffer configuration for Sophron module.</description>
   <file>.</file>
   <arg name="extensions" value="inc,install,module,php,profile,test,theme"/>
 

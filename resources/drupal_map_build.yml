@@ -5,15 +5,14 @@
 #
 
 
-# The Apache httpd project contains the most complete list of file extension to
-# mime type mapping on the planet. We use it to update our own list.
+# We use the default MimeMap map as a starting point.
 -
     - 'Starting from MimeMap default map'
     - selectBaseMap
     - [\FileEye\MimeMap\Map\DefaultMap]
 
 
-# Drupal overrides.
+# Then apply Drupal specific overrides.
 -
     - 'Applying Drupal overrides'
     - applyOverrides
