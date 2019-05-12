@@ -7,3 +7,6 @@ sophron.settings:
       label: 'The map class to use by default'
     map_commands:
       type: sequence
+      label: 'A sequence of mapping commands'
+      sequence:
+        type: sophron.mapping_command

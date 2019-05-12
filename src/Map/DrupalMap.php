@@ -46,6 +46,7 @@ class DrupalMap extends AbstractMap {
    *
    * @internal
    */
+// @codingStandardsIgnoreStart
 // phpcs:disable
     protected static $map = array (
   't' =>

@@ -3,6 +3,8 @@
 namespace Drupal\sophron\Form;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Config\Schema\SchemaCheckTrait;
+use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\sophron\MimeMapManager;
@@ -17,10 +19,19 @@ use Symfony\Component\Yaml\Yaml;
  */
 class SettingsForm extends ConfigFormBase {
 
+  use SchemaCheckTrait;
+
   /**
    * @todo
    */
   protected $mimeMapManager;
+
+  /**
+   * The typed config service.
+   *
+   * @var \Drupal\Core\Config\TypedConfigManagerInterface
+   */
+  protected $typedConfig;
 
   /**
    * {@inheritdoc}
@@ -44,10 +55,13 @@ class SettingsForm extends ConfigFormBase {
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
    * @todo
+   * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config
+   *   The typed config service.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, MimeMapManager $mime_map_manager) {
+  public function __construct(ConfigFactoryInterface $config_factory, MimeMapManager $mime_map_manager, TypedConfigManagerInterface $typed_config) {
     parent::__construct($config_factory);
     $this->mimeMapManager = $mime_map_manager;
+    $this->typedConfig = $typed_config;
   }
 
   /**
@@ -56,7 +70,8 @@ class SettingsForm extends ConfigFormBase {
   public static function create(ContainerInterface $container) {
     return new static(
       $container->get('config.factory'),
-      $container->get('sophron.mime_map.manager')
+      $container->get('sophron.mime_map.manager'),
+      $container->get('config.typed')
     );
   }
 
@@ -232,9 +247,25 @@ class SettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
-    if (PHP_VERSION_ID >= 70000) {
+    if (PHP_VERSION_ID >= 70000 && $form_state->getValue('map_commands') !== '') {
       try {
-        Yaml::parse($form_state->getValue('map_commands'));
+        $map_commands = Yaml::parse($form_state->getValue('map_commands'));
+        $data = $this->configFactory->get('sophron.settings')->get();
+        $data['map_commands'] = $map_commands;
+        $schema_errors = $this->checkConfigSchema($this->typedConfig, 'sophron.settings', $data);
+        if (is_array($schema_errors)) {
+          $fail_items = [];
+          foreach ($schema_errors as $key => $value) {
+            $matches = [];
+            if (preg_match('/sophron\.settings\:map\_commands\.(\d+)/', $key, $matches)) {
+              $item = (int) $matches[1] + 1;
+              $fail_items[$item] = $item;
+            }
+          }
+          $form_state->setErrorByName('map_commands', $this->t("The items at line(s) @lines are wrongly typed. Make sure they follow the pattern '- [method, [arg1, ..., argN]]'.", [
+            '@lines' => implode(', ', $fail_items),
+          ]));
+        }
       }
       catch (\Exception $e) {
         $form_state->setErrorByName('map_commands', $this->t("YAML syntax error: @error", ['@error' => $e->getMessage()]));

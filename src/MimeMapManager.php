@@ -37,7 +37,14 @@ class MimeMapManager {
    */
   protected $sophronSettings;
 
+  /**
+   * @todo
+   */
   protected $currentMapClass;
+
+  /**
+   * @todo
+   */
   protected $initializedMapClasses = [];
 
   /**
