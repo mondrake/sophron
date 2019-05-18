@@ -7,19 +7,17 @@ Sophron of Drupal is a module to enhance MIME type management, based on the
 [FileEye/MimeMap](https://github.com/FileEye/MimeMap) library.
 
 ## Features:
----------
+
 * Enhances Drupal's MIME type detection based on file extension to recognise
-  1200+ MIME types from 1600+ file extensions (vs Drupal 360 MIME types and 475
-  file extensions)
-* Provides an extensive MIME types management API through [FileEye/MimeMap](https://github.com/FileEye/MimeMap)
-* @TODO Allows to replace Drupal's core MIME type guesser
+  1200+ MIME types from 1600+ file extensions (vs Drupal's 360 MIME types and
+  475 file extensions).
+* Provides an extensive MIME type management API through [FileEye/MimeMap](https://github.com/FileEye/MimeMap).
+* Optionally replaces Drupal's core MIME type extension-based guesser.
 
 ## Requirements
 
 * The module **must** be [installed using Composer](https://www.drupal.org/node/2718229).
-
 * Drupal 8.4.0 or higher.
-
 * [FileEye/MimeMap](https://github.com/FileEye/MimeMap) 1.1.1 or higher.
 
 ## Installation
@@ -49,7 +47,7 @@ Sophron of Drupal is a module to enhance MIME type management, based on the
 Sophron uses a MIME type map that is built from [FileEye/MimeMap](https://github.com/FileEye/MimeMap)
 default map, with the adjustments needed to make it fully compatible with
 Drupal's core MIME type mapping. This map is in the stored in the
-`Drupal\sophron\Map\DrupalMap` PHP class.
+```Drupal\sophron\Map\DrupalMap``` PHP class.
 
 MimeMap provides an utility to update the code of the PHP map classes. Sophron's
 map class can be updated starting from upstream's default one by running
@@ -59,8 +57,8 @@ $ cd [project_directory]
 $ vendor/bin/fileeye-mimemap update --class=\\Drupal\\sophron\\Map\\DrupalMap --script=modules/contrib/sophron/resources/drupal_map_build.yml
 ```
 
-The `drupal_map_build.yml` instructs the utility to start the map update from
-the `FileEye\MimeMap\Map\DefaultMap` class with the command
+The ```drupal_map_build.yml``` script instructs the utility to start the map
+update from the ```FileEye\MimeMap\Map\DefaultMap``` class with the command
 
 ```
 # We use the default MimeMap map as a starting point.
@@ -70,7 +68,7 @@ the `FileEye\MimeMap\Map\DefaultMap` class with the command
     - [\FileEye\MimeMap\Map\DefaultMap]
 ```
 
-then run the adjustments required to make the map compatibile with Drupal core
+then run the adjustments required to make the map compatible with Drupal core
 with the command
 
 ```
@@ -88,7 +86,7 @@ with the command
 
 ## Creating custom MIME type to extension maps
 
-The `fileeye-mimemap update` utility can also be used to add new maps by
+The ```fileeye-mimemap update``` utility can also be used to add new maps by
 copy/pasting an existing class, renaming it, and running the utility with a
 custom script that makes the required changes. The custom map can then be set
 as the one to be used by Sophron's in the module configuration.

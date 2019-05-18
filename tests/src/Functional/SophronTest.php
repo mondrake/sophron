@@ -2,10 +2,8 @@
 
 namespace Drupal\Tests\sophron\Functional;
 
-use Drupal\sophron\Map\DrupalMap;
 use Drupal\sophron\MimeMapManager;
 use Drupal\Tests\BrowserTestBase;
-use FileEye\MimeMap\Map\DefaultMap;
 
 /**
  * Tests Sophron functionality.
@@ -13,11 +11,6 @@ use FileEye\MimeMap\Map\DefaultMap;
  * @group sophron
  */
 class SophronTest extends BrowserTestBase {
-
-  /**
-   * @todo
-   */
-  protected $sophronAdmin = 'admin/config/system/sophron';
 
   /**
    * {@inheritdoc}
@@ -43,7 +36,7 @@ class SophronTest extends BrowserTestBase {
     $this->assertSame('', \Drupal::configFactory()->get('sophron.settings')->get('map_class'));
 
     // Load the form, and change the default map class.
-    $this->drupalGet($this->sophronAdmin);
+    $this->drupalGet('admin/config/system/sophron');
     $edit = [
       'map_option' => MimeMapManager::DEFAULT_MAP,
     ];

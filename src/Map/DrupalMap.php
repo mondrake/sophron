@@ -28,6 +28,8 @@ class DrupalMap extends AbstractMap {
     return __FILE__;
   }
 
+// @codingStandardsIgnoreStart
+// phpcs:disable
   /**
    * Mapping between file extensions and MIME types.
    *
@@ -46,8 +48,6 @@ class DrupalMap extends AbstractMap {
    *
    * @internal
    */
-// @codingStandardsIgnoreStart
-// phpcs:disable
     protected static $map = array (
   't' =>
   array (

@@ -314,46 +314,42 @@ class SettingsForm extends ConfigFormBase {
   }
 
   /**
-   * @todo
-   *
-   * @param string $map_class
-   *   @todo ADD IT!
+   * Returns an array of gaps of current map vs Drupal's core mapping.
    *
    * @return array
-   *   A table-type render array.
+   *   An array of simple arrays, each having a file extension, its Drupal MIME
+   *   type guess, and a gap information.
    */
   protected function determineMapGaps() {
     $core_extended_guesser = new CoreExtensionMimeTypeGuesserExtended();
 
-    $exts = $core_extended_guesser->listExtensions();
-    sort($exts);
+    $extensions = $core_extended_guesser->listExtensions();
+    sort($extensions);
 
     $rows = [];
-    foreach ($exts as $ext) {
-      $d_guess = $core_extended_guesser->guess('a.' . $ext);
-      $m_guess = '';
-      $exto = $this->mimeMapManager->getExtension($ext);
-      if ($exto) {
+    foreach ($extensions as $extension_string) {
+      $drupal_mime_type = $core_extended_guesser->guess('a.' . $extension_string);
+
+      $extension = $this->mimeMapManager->getExtension($extension_string);
+      if ($extension) {
         try {
-          $m_guess = $exto->getDefaultType();
+          $mimemap_mime_type = $extension->getDefaultType();
         }
         catch (\Exception $e) {
-          // Do nothing.
+          $mimemap_mime_type = '';
         }
       }
 
-      if ($m_guess === '') {
-        $gap = $this->t('No MIME type mapped to this file extension in Sophron.');
+      $gap = '';
+      if ($mimemap_mime_type === '') {
+        $gap = $this->t('No MIME type mapped to this file extension.');
       }
-      elseif (mb_strtolower($d_guess) != mb_strtolower($m_guess)) {
-        $gap = $this->t("File extension mapped to '@type' in Sophron instead.", ['@type' => $m_guess]);
-      }
-      else {
-        $gap = '';
+      elseif (mb_strtolower($drupal_mime_type) != mb_strtolower($mimemap_mime_type)) {
+        $gap = $this->t("File extension mapped to '@type' instead.", ['@type' => $mimemap_mime_type]);
       }
 
       if ($gap !== '') {
-        $rows[] = [$ext, $d_guess, $gap];
+        $rows[] = [$extension_string, $drupal_mime_type, $gap];
       }
     }
 
