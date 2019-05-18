@@ -3,6 +3,10 @@
 namespace Drupal\Tests\sophron\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
+use Drupal\sophron\Map\DrupalMap;
+use Drupal\sophron\MimeMapManager;
+use FileEye\MimeMap\MalformedTypeException;
+use FileEye\MimeMap\Map\DefaultMap;
 use FileEye\MimeMap\MappingException;
 
 /**
@@ -30,16 +34,35 @@ class SophronApiTest extends KernelTestBase {
   /**
    * @covers ::getMapClass
    * @covers ::setMapClass
+   * @covers ::listExtensions
    * @covers ::getExtension
    */
-  public function testMapGetSet() {
+  public function testGetExtension() {
     $manager = \Drupal::service('sophron.mime_map.manager');
-    $this->assertEquals('Drupal\sophron\Map\DrupalMap', $manager->getMapClass());
+    $this->assertEquals(DrupalMap::class, $manager->getMapClass());
+    $this->assertContains('atomsrv', $manager->listExtensions());
     $this->assertEquals('application/atomserv+xml', $manager->getExtension('atomsrv')->getDefaultType());
-    $manager->setMapClass('FileEye\MimeMap\Map\DefaultMap');
+    $manager->setMapClass(DefaultMap::class);
     $this->assertEquals('application/octet-stream', $manager->getExtension('atomsrv')->getDefaultType(FALSE));
+    // No type for extension.
     $this->setExpectedException(MappingException::class);
     $manager->getExtension('atomsrv')->getDefaultType();
+  }
+
+  /**
+   * @covers ::listTypes
+   * @covers ::getType
+   */
+  public function testGetType() {
+    $manager = \Drupal::service('sophron.mime_map.manager');
+    $this->assertContains('application/atomserv+xml', $manager->listTypes());
+    $this->assertEquals(['atomsrv'], $manager->getType('application/atomserv+xml')->getExtensions());
+    // No extensions for type.
+    $this->setExpectedException(MappingException::class);
+    $manager->getType('a/b')->getExtensions();
+    // Malformed MIME type.
+    $this->setExpectedException(MalformedTypeException::class);
+    $manager->getType('application/');
   }
 
   /**
@@ -52,7 +75,7 @@ class SophronApiTest extends KernelTestBase {
     }
     $config = \Drupal::configFactory()->getEditable('sophron.settings');
     $config
-      ->set('map_class', 'FileEye\MimeMap\Map\DefaultMap')
+      ->set('map_option', MimeMapManager::DEFAULT_MAP)
       ->set('map_commands', [
         ['aaa', ['paramA', 'paramB']],
         ['bbb', ['paramC', 'paramD']],
@@ -61,8 +84,8 @@ class SophronApiTest extends KernelTestBase {
       ])
       ->save();
     $manager = \Drupal::service('sophron.mime_map.manager');
-    $this->assertEquals('FileEye\MimeMap\Map\DefaultMap', $manager->getMapClass());
-    $this->assertCount(4, $manager->getMappingErrors('FileEye\MimeMap\Map\DefaultMap'));
+    $this->assertSame(DefaultMap::class, $manager->getMapClass());
+    $this->assertCount(4, $manager->getMappingErrors(DefaultMap::class));
   }
 
 }

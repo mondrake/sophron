@@ -95,16 +95,28 @@ class SettingsForm extends ConfigFormBase {
       '#group' => 'tabs',
     ];
     $options = [
-      DrupalMap::class => $this->t("Drupal map."),
-      DefaultMap::class => $this->t("MimeMap default map."),
+      MimeMapManager::DRUPAL_MAP => $this->t("Drupal map."),
+      MimeMapManager::DEFAULT_MAP => $this->t("MimeMap default map."),
+      MimeMapManager::CUSTOM_MAP => $this->t("Custom map."),
     ];
-    $form['mapping']['map_class'] = [
+    $form['mapping']['map_option'] = [
       '#type' => 'radios',
       '#title' => $this->t('Map'),
-      '#default_value' => $config->get('map_class'),
+      '#default_value' => $config->get('map_option'),
       '#options' => $options,
       '#required' => TRUE,
       '#description' => $this->t("Select the map to use."),
+    ];
+    $form['mapping']['map_class'] = [
+      '#type' => 'textfield',
+      '#title' => $this->t('Class name'),
+      '#description' => $this->t('A fully qualified PHP class name. The map class must extend from \FileEye\MimeMap\Map\AbstractMap.'),
+      '#default_value' => $config->get('map_class'),
+      '#states' => [
+        'visible' => [
+          ':radio[name="map_option"]' => ['value' => MimeMapManager::CUSTOM_MAP],
+        ],
+      ],
     ];
 
     // Allow mapping commands in the admin UI only for PHP 7+. This is because
@@ -123,7 +135,7 @@ class SettingsForm extends ConfigFormBase {
     }
 
     // Mapping errors.
-    if ($errors = $this->mimeMapManager->getMappingErrors($config->get('map_class'))) {
+    if ($errors = $this->mimeMapManager->getMappingErrors($this->mimeMapManager->getMapClass())) {
       $form['mapping']['mapping_errors'] = [
         '#type' => 'details',
         '#collapsible' => TRUE,
@@ -156,11 +168,11 @@ class SettingsForm extends ConfigFormBase {
     }
 
     // Mapping gaps.
-    if ($gaps = $this->determineMapGaps($config->get('map_class'))) {
+    if ($gaps = $this->determineMapGaps($this->mimeMapManager->getMapClass())) {
       $form['mapping']['gaps'] = [
         '#type' => 'details',
         '#collapsible' => TRUE,
-        '#open' => TRUE,
+        '#open' => FALSE,
         '#title' => $this->t("Mapping gaps"),
         '#description' => $this->t("The list below shows the gaps of the current map vs. Drupal's core MIME type mapping. Overcome the gaps by adding additional mapping commands."),
       ];
@@ -247,6 +259,12 @@ class SettingsForm extends ConfigFormBase {
    * {@inheritdoc}
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
+    // Custom map class.
+    if ($form_state->getValue('map_option') == MimeMapManager::CUSTOM_MAP && !$this->mimeMapManager->isMapClassValid($form_state->getValue('map_class'))) {
+      $form_state->setErrorByName('map_class', $this->t("The map class is invalid. Make sure the selected class is an extension of \FileEye\MimeMap\Map\AbstractMap."));
+    }
+
+    // Mapping commands.
     if (PHP_VERSION_ID >= 70000 && $form_state->getValue('map_commands') !== '') {
       try {
         $map_commands = Yaml::parse($form_state->getValue('map_commands'));
@@ -280,6 +298,7 @@ class SettingsForm extends ConfigFormBase {
     $config = $this->configFactory->getEditable('sophron.settings');
 
     try {
+      $config->set('map_option', $form_state->getValue('map_option'));
       $config->set('map_class', $form_state->getValue('map_class'));
       if (PHP_VERSION_ID >= 70000) {
         $commands = Yaml::parse($form_state->getValue('map_commands'));

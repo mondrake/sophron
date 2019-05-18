@@ -2,9 +2,12 @@ sophron.settings:
   type: config_object
   label: 'Sophron settings'
   mapping:
+    map_option:
+      type: integer
+      label: 'Indicates the map to use'
     map_class:
       type: string
-      label: 'The map class to use by default'
+      label: 'A FQCN custom map'
     map_commands:
       type: sequence
       label: 'A sequence of mapping commands'
