@@ -9,8 +9,6 @@ use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\sophron\MimeMapManagerInterface;
 use Drupal\sophron\CoreExtensionMimeTypeGuesserExtended;
-use Drupal\sophron\Map\DrupalMap;
-use FileEye\MimeMap\Map\DefaultMap;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\Yaml\Yaml;
 
@@ -24,7 +22,7 @@ class SettingsForm extends ConfigFormBase {
   /**
    * The MIME map manager service.
    *
-   * @var \Drupal\sophron\MimeMapManagerInterface $mime_map_manager
+   * @var \Drupal\sophron\MimeMapManagerInterface
    */
   protected $mimeMapManager;
 

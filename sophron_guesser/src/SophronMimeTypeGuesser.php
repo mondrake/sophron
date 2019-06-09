@@ -2,7 +2,6 @@
 
 namespace Drupal\sophron_guesser;
 
-use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\sophron\MimeMapManagerInterface;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface;
@@ -50,10 +49,8 @@ class SophronMimeTypeGuesser implements MimeTypeGuesserInterface {
     array_shift($file_parts);
 
     // Iterate over the file parts, trying to find a match.
-    // For my.awesome.image.jpeg, we try:
-    //   - jpeg
-    //   - image.jpeg, and
-    //   - awesome.image.jpeg
+    // For 'my.awesome.image.jpeg', we try: 'jpeg', then 'image.jpeg', then
+    // 'awesome.image.jpeg'.
     while ($additional_part = array_pop($file_parts)) {
       $extension = strtolower($additional_part . ($extension ? '.' . $extension : ''));
       if ($mime_map_extension = $this->mimeMapManager->getExtension($extension)) {
@@ -76,7 +73,7 @@ class SophronMimeTypeGuesser implements MimeTypeGuesserInterface {
    *   Not relevant.
    */
   public function setMapping(array $mapping = NULL) {
-    return;
+    // Do nothing.
   }
 
 }

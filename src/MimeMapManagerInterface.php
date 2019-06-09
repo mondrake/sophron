@@ -5,7 +5,7 @@ namespace Drupal\sophron;
 /**
  * Provides an interface for FileMapManager.
  */
-class MimeMapManagerInterface {
+interface MimeMapManagerInterface {
 
   /**
    * Option to use Sophron's Drupal-compatible map.

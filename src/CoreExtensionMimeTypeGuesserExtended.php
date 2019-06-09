@@ -24,6 +24,7 @@ class CoreExtensionMimeTypeGuesserExtended extends ExtensionMimeTypeGuesser {
    * Returns a list of MIME types supported by Drupal's core guesser.
    *
    * @return string[]
+   *   A list of MIME types.
    */
   public function listTypes() {
     return $this->getMapping()['mimetypes'];
@@ -33,6 +34,7 @@ class CoreExtensionMimeTypeGuesserExtended extends ExtensionMimeTypeGuesser {
    * Returns a list of file extensions supported by Drupal's core guesser.
    *
    * @return string[]
+   *   A list of file extensions.
    */
   public function listExtensions() {
     return array_keys($this->getMapping()['extensions']);
