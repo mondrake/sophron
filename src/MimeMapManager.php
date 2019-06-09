@@ -17,22 +17,7 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 /**
  * Provides a sensible mapping between filename extensions and MIME types.
  */
-class MimeMapManager {
-
-  /**
-   * Option to use Sophron's Drupal-compatible map.
-   */
-  const DRUPAL_MAP = 0;
-
-  /**
-   * Option to use MimeMap's default map.
-   */
-  const DEFAULT_MAP = 1;
-
-  /**
-   * Option to use a custom defined map.
-   */
-  const CUSTOM_MAP = 99;
+class MimeMapManager implements MimeMapManagerInterface {
 
   /**
    * The event dispatcher.
@@ -86,15 +71,7 @@ class MimeMapManager {
   }
 
   /**
-   * Determines if a FQCN is a valid map class.
-   *
-   * Map classes muste extend from FileEye\MimeMap\Map\AbstractMap.
-   *
-   * @param string $map_class
-   *   A FQCN.
-   *
-   * @return bool
-   *   TRUE if valid, FALSE otherwise.
+   * {@inheritdoc}
    */
   public function isMapClassValid($map_class) {
     if (class_exists($map_class) && in_array(AbstractMap::class, class_parents($map_class))) {
@@ -104,10 +81,7 @@ class MimeMapManager {
   }
 
   /**
-   * Gets the FQCN of map currently in use by the manager.
-   *
-   * @return string
-   *   A FQCN.
+   * {@inheritdoc}
    */
   public function getMapClass() {
     if (!$this->currentMapClass) {
@@ -131,12 +105,7 @@ class MimeMapManager {
   }
 
   /**
-   * Sets the map class to use by the manager.
-   *
-   * @param string $map_class
-   *   A FQCN.
-   *
-   * @return $this
+   * {@inheritdoc}
    */
   public function setMapClass($map_class) {
     $this->currentMapClass = $map_class;
@@ -149,13 +118,7 @@ class MimeMapManager {
   }
 
   /**
-   * Gets the initialization errors of a map class.
-   *
-   * @param string $map_class
-   *   A FQCN.
-   *
-   * @return array
-   *   The array of mapping errors.
+   * {@inheritdoc}
    */
   public function getMappingErrors($map_class) {
     $this->setMapClass($map_class);
@@ -163,25 +126,14 @@ class MimeMapManager {
   }
 
   /**
-   * Gets the list of MIME types.
-   *
-   * @return string[]
-   *   A simple array of MIME type strings.
+   * {@inheritdoc}
    */
   public function listTypes() {
     return MapHandler::map($this->getMapClass())->listTypes();
   }
 
   /**
-   * Gets a MIME type.
-   *
-   * @param string $type
-   *   A MIME type string.
-   *
-   * @return \FileEye\MimeMap\Type
-   *   A Type object.
-   *
-   * @see \FileEye\MimeMap\Type
+   * {@inheritdoc}
    */
   public function getType($type) {
     try {
@@ -196,25 +148,14 @@ class MimeMapManager {
   }
 
   /**
-   * Gets the list of file extensions.
-   *
-   * @return string[]
-   *   A simple array of file extension strings.
+   * {@inheritdoc}
    */
   public function listExtensions() {
     return MapHandler::map($this->getMapClass())->listExtensions();
   }
 
   /**
-   * Gets a file extension.
-   *
-   * @param string $extension
-   *   A file extension string.
-   *
-   * @return \FileEye\MimeMap\Extension
-   *   An Extension object.
-   *
-   * @see \FileEye\MimeMap\Extension
+   * {@inheritdoc}
    */
   public function getExtension($extension) {
     try {

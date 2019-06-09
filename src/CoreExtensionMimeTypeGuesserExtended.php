@@ -5,7 +5,11 @@ namespace Drupal\sophron;
 use Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser;
 
 /**
- * @todo
+ * Extends the class that Drupal core uses to guess the MIME type of a file.
+ *
+ * This class is used only to access the protected properities in the parent
+ * class, so to make it possible to compare Sophron's supported MIME types with
+ * Drupal core ones.
  */
 class CoreExtensionMimeTypeGuesserExtended extends ExtensionMimeTypeGuesser {
 
@@ -17,21 +21,25 @@ class CoreExtensionMimeTypeGuesserExtended extends ExtensionMimeTypeGuesser {
   }
 
   /**
-   * @todo
+   * Returns a list of MIME types supported by Drupal's core guesser.
+   *
+   * @return string[]
    */
   public function listTypes() {
     return $this->getMapping()['mimetypes'];
   }
 
   /**
-   * @todo
+   * Returns a list of file extensions supported by Drupal's core guesser.
+   *
+   * @return string[]
    */
   public function listExtensions() {
     return array_keys($this->getMapping()['extensions']);
   }
 
   /**
-   * @todo
+   * Ensures Drupal's core MIME type mapping is altered by modules.
    */
   protected function getMapping() {
     if ($this->mapping === NULL) {

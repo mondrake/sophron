@@ -2,7 +2,7 @@
 
 namespace Drupal\Tests\sophron\Functional;
 
-use Drupal\sophron\MimeMapManager;
+use Drupal\sophron\MimeMapManagerInterface;
 use Drupal\Tests\BrowserTestBase;
 
 /**
@@ -32,30 +32,30 @@ class SophronTest extends BrowserTestBase {
    */
   public function testFormAndSettings() {
     // The default map has been set by install.
-    $this->assertSame(MimeMapManager::DRUPAL_MAP, \Drupal::configFactory()->get('sophron.settings')->get('map_option'));
+    $this->assertSame(MimeMapManagerInterface::DRUPAL_MAP, \Drupal::configFactory()->get('sophron.settings')->get('map_option'));
     $this->assertSame('', \Drupal::configFactory()->get('sophron.settings')->get('map_class'));
 
     // Load the form, and change the default map class.
     $this->drupalGet('admin/config/system/sophron');
     $edit = [
-      'map_option' => MimeMapManager::DEFAULT_MAP,
+      'map_option' => MimeMapManagerInterface::DEFAULT_MAP,
     ];
     $this->drupalPostForm(NULL, $edit, 'Save configuration');
 
     // FileEye map has been set as default, and gaps exists.
     $this->assertSession()->responseContains('Mapping gaps');
-    $this->assertSame(MimeMapManager::DEFAULT_MAP, \Drupal::configFactory()->get('sophron.settings')->get('map_option'));
+    $this->assertSame(MimeMapManagerInterface::DEFAULT_MAP, \Drupal::configFactory()->get('sophron.settings')->get('map_option'));
     $this->assertSame('', \Drupal::configFactory()->get('sophron.settings')->get('map_class'));
 
     // Set an invalid custom mapping class.
     $edit = [
-      'map_option' => MimeMapManager::CUSTOM_MAP,
+      'map_option' => MimeMapManagerInterface::CUSTOM_MAP,
       'map_class' => BrowserTestBase::class,
     ];
     $this->drupalPostForm(NULL, $edit, 'Save configuration');
     $this->assertSession()->responseContains('The map class is invalid.');
     $edit = [
-      'map_option' => MimeMapManager::DEFAULT_MAP,
+      'map_option' => MimeMapManagerInterface::DEFAULT_MAP,
     ];
     $this->drupalPostForm(NULL, $edit, 'Save configuration');
 

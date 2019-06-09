@@ -7,7 +7,7 @@ use Drupal\Core\Config\Schema\SchemaCheckTrait;
 use Drupal\Core\Config\TypedConfigManagerInterface;
 use Drupal\Core\Form\ConfigFormBase;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\sophron\MimeMapManager;
+use Drupal\sophron\MimeMapManagerInterface;
 use Drupal\sophron\CoreExtensionMimeTypeGuesserExtended;
 use Drupal\sophron\Map\DrupalMap;
 use FileEye\MimeMap\Map\DefaultMap;
@@ -22,7 +22,9 @@ class SettingsForm extends ConfigFormBase {
   use SchemaCheckTrait;
 
   /**
-   * @todo
+   * The MIME map manager service.
+   *
+   * @var \Drupal\sophron\MimeMapManagerInterface $mime_map_manager
    */
   protected $mimeMapManager;
 
@@ -54,11 +56,12 @@ class SettingsForm extends ConfigFormBase {
    *
    * @param \Drupal\Core\Config\ConfigFactoryInterface $config_factory
    *   The factory for configuration objects.
-   * @todo
+   * @param \Drupal\sophron\MimeMapManagerInterface $mime_map_manager
+   *   The MIME map manager service.
    * @param \Drupal\Core\Config\TypedConfigManagerInterface $typed_config
    *   The typed config service.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, MimeMapManager $mime_map_manager, TypedConfigManagerInterface $typed_config) {
+  public function __construct(ConfigFactoryInterface $config_factory, MimeMapManagerInterface $mime_map_manager, TypedConfigManagerInterface $typed_config) {
     parent::__construct($config_factory);
     $this->mimeMapManager = $mime_map_manager;
     $this->typedConfig = $typed_config;
@@ -95,9 +98,9 @@ class SettingsForm extends ConfigFormBase {
       '#group' => 'tabs',
     ];
     $options = [
-      MimeMapManager::DRUPAL_MAP => $this->t("Drupal map."),
-      MimeMapManager::DEFAULT_MAP => $this->t("MimeMap default map."),
-      MimeMapManager::CUSTOM_MAP => $this->t("Custom map."),
+      MimeMapManagerInterface::DRUPAL_MAP => $this->t("Drupal map."),
+      MimeMapManagerInterface::DEFAULT_MAP => $this->t("MimeMap default map."),
+      MimeMapManagerInterface::CUSTOM_MAP => $this->t("Custom map."),
     ];
     $form['mapping']['map_option'] = [
       '#type' => 'radios',
@@ -114,7 +117,7 @@ class SettingsForm extends ConfigFormBase {
       '#default_value' => $config->get('map_class'),
       '#states' => [
         'visible' => [
-          ':radio[name="map_option"]' => ['value' => MimeMapManager::CUSTOM_MAP],
+          ':radio[name="map_option"]' => ['value' => MimeMapManagerInterface::CUSTOM_MAP],
         ],
       ],
     ];
@@ -260,7 +263,7 @@ class SettingsForm extends ConfigFormBase {
    */
   public function validateForm(array &$form, FormStateInterface $form_state) {
     // Custom map class.
-    if ($form_state->getValue('map_option') == MimeMapManager::CUSTOM_MAP && !$this->mimeMapManager->isMapClassValid($form_state->getValue('map_class'))) {
+    if ($form_state->getValue('map_option') == MimeMapManagerInterface::CUSTOM_MAP && !$this->mimeMapManager->isMapClassValid($form_state->getValue('map_class'))) {
       $form_state->setErrorByName('map_class', $this->t("The map class is invalid. Make sure the selected class is an extension of \FileEye\MimeMap\Map\AbstractMap."));
     }
 

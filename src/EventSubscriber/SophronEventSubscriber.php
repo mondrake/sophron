@@ -49,7 +49,13 @@ class SophronEventSubscriber implements EventSubscriberInterface {
   }
 
   /**
-   * @todo
+   * Reacts to a 'sophron.map.initialize' event.
+   *
+   * Alters the map's mappings at run-time with additional commands stored in
+   * the module settings.
+   *
+   * @param \Drupal\sophron\Event\MapEvent $event
+   *   Sophron's map event.
    */
   public function initializeMap(MapEvent $event) {
     // Run additional commands mapping only for PHP 7+. This is because running

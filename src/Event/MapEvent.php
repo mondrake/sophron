@@ -55,7 +55,14 @@ class MapEvent extends Event {
   /**
    * Adds an error.
    *
-   * @todo
+   * @param string $method
+   *   An identifier of the method where the error occurred.
+   * @param array $args
+   *   An array of arguments passed to the method.
+   * @param string $type
+   *   An identifier of the type of the error.
+   * @param string $message
+   *   A messagge detailing the error.
    */
   public function addError($method, array $args, $type, $message) {
     $this->errors[] = [

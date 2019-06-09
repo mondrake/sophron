@@ -4,7 +4,7 @@ namespace Drupal\sophron_guesser;
 
 use Drupal\Core\Extension\ModuleHandlerInterface;
 use Drupal\Core\File\FileSystemInterface;
-use Drupal\sophron\MimeMapManager;
+use Drupal\sophron\MimeMapManagerInterface;
 use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface;
 
 /**
@@ -15,7 +15,7 @@ class SophronMimeTypeGuesser implements MimeTypeGuesserInterface {
   /**
    * The MIME map manager service.
    *
-   * @var \Drupal\sophron\MimeMapManager
+   * @var \Drupal\sophron\MimeMapManagerInterface
    */
   protected $mimeMapManager;
 
@@ -29,12 +29,12 @@ class SophronMimeTypeGuesser implements MimeTypeGuesserInterface {
   /**
    * Constructs a SophronMimeTypeGuesser object.
    *
-   * @param \Drupal\sophron\MimeMapManager $mime_map_manager
+   * @param \Drupal\sophron\MimeMapManagerInterface $mime_map_manager
    *   The MIME map manager service.
    * @param \Drupal\Core\File\FileSystemInterface $file_system
    *   The file system service.
    */
-  public function __construct(MimeMapManager $mime_map_manager, FileSystemInterface $file_system) {
+  public function __construct(MimeMapManagerInterface $mime_map_manager, FileSystemInterface $file_system) {
     $this->mimeMapManager = $mime_map_manager;
     $this->fileSystem = $file_system;
   }
@@ -67,11 +67,15 @@ class SophronMimeTypeGuesser implements MimeTypeGuesserInterface {
   /**
    * Sets the mimetypes/extension mapping to use when guessing mimetype.
    *
+   * This method is implemented to ensure that when this class is set to
+   * override \Drupal\Core\File\MimeType\ExtensionMimeTypeGuesser in the service
+   * definition, any call to this method does not fatal. Actually, for Sophron
+   * this is a no-op.
+   *
    * @param array|null $mapping
-   *   Passing a NULL mapping will cause guess() to use self::$defaultMapping.
+   *   Not relevant.
    */
   public function setMapping(array $mapping = NULL) {
-    // @todo shall we do something?
     return;
   }
 

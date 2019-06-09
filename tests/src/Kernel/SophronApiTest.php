@@ -4,7 +4,7 @@ namespace Drupal\Tests\sophron\Kernel;
 
 use Drupal\KernelTests\KernelTestBase;
 use Drupal\sophron\Map\DrupalMap;
-use Drupal\sophron\MimeMapManager;
+use Drupal\sophron\MimeMapManagerInterface;
 use FileEye\MimeMap\MalformedTypeException;
 use FileEye\MimeMap\Map\DefaultMap;
 use FileEye\MimeMap\MappingException;
@@ -75,7 +75,7 @@ class SophronApiTest extends KernelTestBase {
     }
     $config = \Drupal::configFactory()->getEditable('sophron.settings');
     $config
-      ->set('map_option', MimeMapManager::DEFAULT_MAP)
+      ->set('map_option', MimeMapManagerInterface::DEFAULT_MAP)
       ->set('map_commands', [
         ['aaa', ['paramA', 'paramB']],
         ['bbb', ['paramC', 'paramD']],
