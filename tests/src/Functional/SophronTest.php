@@ -94,7 +94,6 @@ class SophronTest extends BrowserTestBase {
     $this->assertEquals([
       ['aaa', ['paramA', 'paramB']],
     ], \Drupal::configFactory()->get('sophron.settings')->get('map_commands'));
-
   }
 
 }

@@ -25,7 +25,7 @@ Sophron of Drupal is a module to enhance MIME type management, based on the
 * Install the required module packages with Composer. From the Drupal
   installation root directory, type
 ```
-  $ composer require drupal/sophron:^1
+$ composer require drupal/sophron:^1
 ```
   This will download both the module and any dependency.
 
