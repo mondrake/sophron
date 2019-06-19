@@ -106,4 +106,15 @@ interface MimeMapManagerInterface {
    */
   public function getExtension($extension);
 
+  /**
+   * Check installation requirements and do status reporting.
+   *
+   * @param string $phase
+   *   The phase in which requirements are checked.
+   *
+   * @return
+   *   An associative array of requirements.
+   */
+  public function requirements($phase);
+
 }

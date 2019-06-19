@@ -6,7 +6,7 @@ of mimes_ ([Wikipedia](https://en.wikipedia.org/wiki/Sophron)).
 Sophron of Drupal is a module to enhance MIME type management, based on the
 [FileEye/MimeMap](https://github.com/FileEye/MimeMap) library.
 
-## Features:
+## Features
 
 * Enhances Drupal's MIME type detection based on file extension to recognise
   1200+ MIME types from 1600+ file extensions (vs Drupal's 360 MIME types and
@@ -32,15 +32,60 @@ $ composer require drupal/sophron:^1
 * Enable the module. Navigate to _Manage > Extend_. Check the box next to the
   module and then click the 'Install' button at the bottom.
 
+## Override Drupal core MIME type guessing
+
+The Sophron module by itself just provides a service and an API for MIME type
+management. You can enable the complimentary **Sophron guesser** module to let
+Sophron manage the MIME type guessing, overriding Drupal core's guesser.
+
+**NOTE:** The Sophron guesser module does not invoke the
+```hook_file_mimetype_mapping_alter``` hook to allow altering the mapping of
+MIME types to file extensions. If you need to modify mappings, use the
+Sophron configuration UI (see below) to replicate any mapping changes.
+Alternatively, modules can implement event subscribers that react to a
+```Drupal\sophron\Event\MapEvent::INIT``` event that is fired when a map
+is initialised, and make the necessary changes to the mappings.
+
 ## Configuration
 
 * Go to _Administration » Configuration » System » MIME Types_.
 
-* ...
+* In the _'Mapping'_ tab, select the most appropriate map for your needs. In
+  the _'Mapping commands'_ textbox you can add additional mapping commands (see
+  format below) that will be executed at runtime when the selected map is
+  initialised (i.e. before any MIME type guessing is performed).
+  If there are mapping errors or gaps between Drupal core mappings and the
+  selected map mappings, specific reports are provided.
+
+* The _'MIME types'_ tab contains a report of all supported MIME types, with
+  their associated file extensions, descriptions, and aliases.
+
+* The _'File extension'_ tab contains a report of all supported file extensions,
+  with their associated MIME types and MIME type descriptions.
 
 ## Mapping commands
 
-...
+Mapping commands should be entered in the following format, one command per
+line:
+```
+- [method, [arg1, arg2, ...]]
+```
+Where _method_ is a method from the _FileEye\MimeMap\Map\AbstractMap_ class,
+and the _argN_ are the method's arguments.
+
+Most useful commands:
+
+* _addTypeExtensionMapping, [type, extension]_ adds a type-to-extension
+  mapping. Example: ```- [addTypeExtensionMapping, [application/dsptype, tsp]]```
+
+* _addTypeAlias, [type, alias]_ adds an alias of a MIME type.
+  Example: ```- [addTypeAlias, [application/atom+xml, application/atom]]```
+
+* _setExtensionDefaultType, [type, extension]_ changes the default extension
+  for a MIME type. Example: ```- [setExtensionDefaultType, [asc, text/plain]]```
+
+* _removeType, [type]_ removes the entire mapping of a type.
+  Example: ```- [removeType, [text/plain]]```
 
 ## Updating Sophron map
 

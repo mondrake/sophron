@@ -88,6 +88,19 @@ class SettingsForm extends ConfigFormBase {
       '#tree' => FALSE,
     ];
 
+    // Guessing.
+    $guessing_status = $this->mimeMapManager->requirements('runtime')['mime_type_guessing_sophron'];
+    $form['guessing'] = [
+      '#type' => 'details',
+      '#title' => $guessing_status['title'],
+      '#group' => 'tabs',
+    ];
+    $form['guessing']['info'] = [
+      '#type' => 'item',
+      '#title' => $guessing_status['value'],
+      '#description' => $guessing_status['description'],
+    ];
+
     // Mapping.
     $form['mapping'] = [
       '#type' => 'details',
@@ -96,9 +109,9 @@ class SettingsForm extends ConfigFormBase {
       '#group' => 'tabs',
     ];
     $options = [
-      MimeMapManagerInterface::DRUPAL_MAP => $this->t("Drupal map."),
-      MimeMapManagerInterface::DEFAULT_MAP => $this->t("MimeMap default map."),
-      MimeMapManagerInterface::CUSTOM_MAP => $this->t("Custom map."),
+      MimeMapManagerInterface::DRUPAL_MAP => $this->t("<strong>Sophron map.</strong> Use this map for maximum compatibility with Drupal, still increasing the number of MIME types and file extensions identified."),
+      MimeMapManagerInterface::DEFAULT_MAP => $this->t("<strong>MimeMap default map.</strong> Use this map for maximum compatibility with Apache and Freedesktop projects, accepting differences versus current Drupal mappings."),
+      MimeMapManagerInterface::CUSTOM_MAP => $this->t("<strong>Custom map.</strong> Use this option to select a custom built mapping class."),
     ];
     $form['mapping']['map_option'] = [
       '#type' => 'radios',

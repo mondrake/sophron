@@ -3,6 +3,8 @@
 namespace Drupal\sophron;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
+use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\Url;
 use Drupal\sophron\Event\MapEvent;
 use Drupal\sophron\Map\DrupalMap;
 use FileEye\MimeMap\Extension;
@@ -34,6 +36,13 @@ class MimeMapManager implements MimeMapManagerInterface {
   protected $configFactory;
 
   /**
+   * The module handler service.
+   *
+   * @var \Drupal\Core\Extension\ModuleHandlerInterface
+   */
+  protected $moduleHandler;
+
+  /**
    * The module configuration settings.
    *
    * @var \Drupal\Core\Config\ImmutableConfig
@@ -63,11 +72,14 @@ class MimeMapManager implements MimeMapManagerInterface {
    *   The config factory.
    * @param \Symfony\Component\EventDispatcher\EventDispatcherInterface $dispatcher
    *   The event dispatcher.
+   * @param \Drupal\Core\Extension\ModuleHandlerInterface $module_handler
+   *   The module handler service.
    */
-  public function __construct(ConfigFactoryInterface $config_factory, EventDispatcherInterface $dispatcher) {
+  public function __construct(ConfigFactoryInterface $config_factory, EventDispatcherInterface $dispatcher, ModuleHandlerInterface $module_handler) {
     $this->configFactory = $config_factory;
     $this->sophronSettings = $this->configFactory->get('sophron.settings');
     $this->eventDispatcher = $dispatcher;
+    $this->moduleHandler = $module_handler;
   }
 
   /**
@@ -164,6 +176,20 @@ class MimeMapManager implements MimeMapManagerInterface {
     catch (MappingException $e) {
       return NULL;
     }
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function requirements($phase) {
+    $is_sophron_guessing = $this->moduleHandler->moduleExists('sophron_guesser');
+    return [
+      'mime_type_guessing_sophron' => [
+        'title' => t('MIME type guessing'),
+        'value' => $is_sophron_guessing ? t('Sophron') : t('Drupal core'),
+        'description' => $is_sophron_guessing ? t('The <strong>Sophron guesser</strong> module is providing MIME type guessing. <a href=":url">Uninstall the module</a> to revert to Drupal core guessing.', [':url' => Url::fromRoute('system.modules_uninstall')->toString()]) : t('Drupal core is providing MIME type guessing. <a href=":url">Install the <strong>Sophron guesser</strong> module</a> to allow the enhanced guessing provided by Sophron.', [':url' => Url::fromRoute('system.modules_list')->toString()]) ,
+      ],
+    ];
   }
 
 }

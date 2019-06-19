@@ -45,7 +45,7 @@ class SophronApiTest extends KernelTestBase {
     $manager->setMapClass(DefaultMap::class);
     $this->assertEquals('application/octet-stream', $manager->getExtension('atomsrv')->getDefaultType(FALSE));
     // No type for extension.
-    $this->setExpectedException(MappingException::class);
+    $this->expectException(MappingException::class);
     $manager->getExtension('atomsrv')->getDefaultType();
   }
 
@@ -58,10 +58,10 @@ class SophronApiTest extends KernelTestBase {
     $this->assertContains('application/atomserv+xml', $manager->listTypes());
     $this->assertEquals(['atomsrv'], $manager->getType('application/atomserv+xml')->getExtensions());
     // No extensions for type.
-    $this->setExpectedException(MappingException::class);
+    $this->expectException(MappingException::class);
     $manager->getType('a/b')->getExtensions();
     // Malformed MIME type.
-    $this->setExpectedException(MalformedTypeException::class);
+    $this->expectException(MalformedTypeException::class);
     $manager->getType('application/');
   }
 
