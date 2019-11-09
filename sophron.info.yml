@@ -1,5 +1,8 @@
 type: module
 core: 8.x
+core_version_requirement: ^8.8 || ^9
 name: Sophron
 description: 'Provides an extensive MIME types management API.'
 configure: sophron.settings
+dependencies:
+  - drupal:system (>=8.4.0)

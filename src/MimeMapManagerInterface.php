@@ -112,7 +112,7 @@ interface MimeMapManagerInterface {
    * @param string $phase
    *   The phase in which requirements are checked.
    *
-   * @return
+   * @return array
    *   An associative array of requirements.
    */
   public function requirements($phase);

@@ -4,6 +4,7 @@ namespace Drupal\sophron;
 
 use Drupal\Core\Config\ConfigFactoryInterface;
 use Drupal\Core\Extension\ModuleHandlerInterface;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 use Drupal\Core\Url;
 use Drupal\sophron\Event\MapEvent;
 use Drupal\sophron\Map\DrupalMap;
@@ -20,6 +21,8 @@ use Symfony\Component\EventDispatcher\EventDispatcherInterface;
  * Provides a sensible mapping between filename extensions and MIME types.
  */
 class MimeMapManager implements MimeMapManagerInterface {
+
+  use StringTranslationTrait;
 
   /**
    * The event dispatcher.
@@ -185,9 +188,9 @@ class MimeMapManager implements MimeMapManagerInterface {
     $is_sophron_guessing = $this->moduleHandler->moduleExists('sophron_guesser');
     return [
       'mime_type_guessing_sophron' => [
-        'title' => t('MIME type guessing'),
-        'value' => $is_sophron_guessing ? t('Sophron') : t('Drupal core'),
-        'description' => $is_sophron_guessing ? t('The <strong>Sophron guesser</strong> module is providing MIME type guessing. <a href=":url">Uninstall the module</a> to revert to Drupal core guessing.', [':url' => Url::fromRoute('system.modules_uninstall')->toString()]) : t('Drupal core is providing MIME type guessing. <a href=":url">Install the <strong>Sophron guesser</strong> module</a> to allow the enhanced guessing provided by Sophron.', [':url' => Url::fromRoute('system.modules_list')->toString()]) ,
+        'title' => $this->t('MIME type guessing'),
+        'value' => $is_sophron_guessing ? $this->t('Sophron') : $this->t('Drupal core'),
+        'description' => $is_sophron_guessing ? $this->t('The <strong>Sophron guesser</strong> module is providing MIME type guessing. <a href=":url">Uninstall the module</a> to revert to Drupal core guessing.', [':url' => Url::fromRoute('system.modules_uninstall')->toString()]) : $this->t('Drupal core is providing MIME type guessing. <a href=":url">Install the <strong>Sophron guesser</strong> module</a> to allow the enhanced guessing provided by Sophron.', [':url' => Url::fromRoute('system.modules_list')->toString()]),
       ],
     ];
   }
