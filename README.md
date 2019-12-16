@@ -18,7 +18,7 @@ Sophron of Drupal is a module to enhance MIME type management, based on the
 
 * The module **must** be [installed using Composer](https://www.drupal.org/node/2718229).
 * Drupal 8.4.0 or higher.
-* [FileEye/MimeMap](https://github.com/FileEye/MimeMap) 1.1.1 or higher.
+* [FileEye/MimeMap](https://github.com/FileEye/MimeMap) 1.1.3 or higher.
 
 ## Installation
 
