@@ -25,7 +25,7 @@ class SophronTest extends BrowserTestBase {
   /**
    * {@inheritdoc}
    */
-  public function setUp() {
+  public function setUp(): void {
     parent::setUp();
     $this->drupalLogin($this->drupalCreateUser([
       'administer site configuration',
@@ -35,7 +35,7 @@ class SophronTest extends BrowserTestBase {
   /**
    * Test settings form.
    */
-  public function testFormAndSettings() {
+  public function testFormAndSettings(): void {
     // The default map has been set by install.
     $this->assertSame(MimeMapManagerInterface::DRUPAL_MAP, \Drupal::configFactory()->get('sophron.settings')->get('map_option'));
     $this->assertSame('', \Drupal::configFactory()->get('sophron.settings')->get('map_class'));
