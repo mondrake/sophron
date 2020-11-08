@@ -64,11 +64,6 @@ class SophronTest extends BrowserTestBase {
     ];
     $this->drupalPostForm(NULL, $edit, 'Save configuration');
 
-    // Test mapping commands, only for PHP 7+.
-    if (PHP_VERSION_ID < 70000) {
-      $this->assertSession()->fieldNotExists('map_commands');
-      return;
-    }
     $this->assertEquals('application/octet-stream', \Drupal::service('sophron.mime_map.manager')->getExtension('quxqux')->getDefaultType(FALSE));
     $this->assertSession()->fieldExists('map_commands');
     $edit = [

@@ -70,9 +70,6 @@ class SophronApiTest extends KernelTestBase {
    * @covers ::getMappingErrors
    */
   public function testGetMappingErrors(): void {
-    if (PHP_VERSION_ID < 70000) {
-      $this->markTestSkipped('Not supported before PHP 7.0');
-    }
     $config = \Drupal::configFactory()->getEditable('sophron.settings');
     $config
       ->set('map_option', MimeMapManagerInterface::DEFAULT_MAP)
