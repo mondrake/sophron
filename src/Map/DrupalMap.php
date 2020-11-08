@@ -21600,8 +21600,8 @@ class DrupalMap extends AbstractMap {
     array (
       't' =>
       array (
-        0 => 'text/x-common-lisp',
-        1 => 'chemical/x-rosdal',
+        0 => 'chemical/x-rosdal',
+        1 => 'text/x-common-lisp',
       ),
     ),
     'rp' =>
@@ -23187,7 +23187,8 @@ class DrupalMap extends AbstractMap {
     array (
       't' =>
       array (
-        0 => 'text/tcl',
+        0 => 'text/x-tcl',
+        1 => 'text/tcl',
       ),
     ),
     'tlrz' =>
@@ -27340,6 +27341,7 @@ class DrupalMap extends AbstractMap {
       'e' =>
       array (
         0 => 'tcl',
+        1 => 'tk',
       ),
       't' =>
       array (
