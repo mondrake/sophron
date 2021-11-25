@@ -4,7 +4,7 @@ namespace Drupal\sophron_guesser;
 
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\sophron\MimeMapManagerInterface;
-use Symfony\Component\Mime\MimeTypeGuesserInterface;
+use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface;
 
 /**
  * Makes possible to guess the MIME type of a file using its extension.
@@ -59,6 +59,14 @@ class SophronMimeTypeGuesser implements MimeTypeGuesserInterface {
     }
 
     return 'application/octet-stream';
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function guess($path) {
+    @trigger_error(__METHOD__ . '() is deprecated in drupal:9.1.0 and is removed from drupal:10.0.0. Use ::guessMimeType() instead. See https://www.drupal.org/node/3133341', E_USER_DEPRECATED);
+    return $this->guessMimeType($path);
   }
 
   /**
