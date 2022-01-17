@@ -4,7 +4,7 @@ namespace Drupal\sophron_guesser;
 
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\sophron\MimeMapManagerInterface;
-use Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface;
+use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
 /**
  * Makes possible to guess the MIME type of a file using its extension.

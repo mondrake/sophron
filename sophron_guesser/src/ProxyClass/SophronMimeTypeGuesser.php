@@ -12,7 +12,7 @@ namespace Drupal\sophron_guesser\ProxyClass {
      *
      * @see \Drupal\Component\ProxyBuilder
      */
-    class SophronMimeTypeGuesser implements \Symfony\Component\HttpFoundation\File\MimeType\MimeTypeGuesserInterface
+    class SophronMimeTypeGuesser implements \Symfony\Component\Mime\MimeTypeGuesserInterface
     {
 
         use \Drupal\Core\DependencyInjection\DependencySerializationTrait;
