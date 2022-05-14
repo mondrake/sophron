@@ -246,7 +246,7 @@ class SettingsForm extends ConfigFormBase {
           $i++,
           $extension_string,
           implode(', ', $extension->getTypes()),
-          $defaultExtensionType->hasDescription() : $defaultExtensionType->getDescription() : '',
+          $defaultExtensionType->hasDescription() ? $defaultExtensionType->getDescription() : '',
         ];
       }
     }
