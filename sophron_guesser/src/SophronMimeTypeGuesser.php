@@ -4,6 +4,7 @@ namespace Drupal\sophron_guesser;
 
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\sophron\MimeMapManagerInterface;
+use FileEye\MimeMap\MappingException;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
 
 /**
@@ -54,7 +55,12 @@ class SophronMimeTypeGuesser implements MimeTypeGuesserInterface {
     while ($additional_part = array_pop($file_parts)) {
       $extension = strtolower($additional_part . ($extension ? '.' . $extension : ''));
       if ($mime_map_extension = $this->mimeMapManager->getExtension($extension)) {
-        return $mime_map_extension->getDefaultType(FALSE);
+        try {
+          return $mime_map_extension->getDefaultType();
+        }
+        catch (MappingException $e) {
+          return 'application/octet-stream';
+        }
       }
     }
 
