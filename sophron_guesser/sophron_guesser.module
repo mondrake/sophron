@@ -1,0 +1,25 @@
+<?php
+
+/**
+ * @file
+ * Sophron Guesser - Replaces Drupal core MIME type guesser with Sophron.
+ */
+
+use Drupal\file\FileInterface;
+
+/**
+ * Implements hook_help().
+ */
+function sophron_guesser_file_validate(FileInterface $file) {
+  dump($file);
+  $errors = [];
+
+/*  if (!$file->getFilename()) {
+    $errors[] = t("The file's name is empty. Please give a name to the file.");
+  }
+  if (strlen($file->getFilename()) > 255) {
+   $errors[] = t("The file's name exceeds the 255 characters limit. Please rename the file and try again.");
+ }*/
+
+  return $errors;
+}
