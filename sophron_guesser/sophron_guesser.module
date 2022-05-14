@@ -13,7 +13,7 @@ use Drupal\file\FileInterface;
 function sophron_guesser_file_validate(FileInterface $file) {
 //  dump($file);
   $errors = [];
-  $errors = var_export($file, true);
+  throw new \RuntimeException(var_export($file, true));
 /*  if (!$file->getFilename()) {
     $errors[] = t("The file's name is empty. Please give a name to the file.");
   }
