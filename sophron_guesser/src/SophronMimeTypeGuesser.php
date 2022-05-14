@@ -47,7 +47,7 @@ class SophronMimeTypeGuesser implements MimeTypeGuesserInterface {
    * {@inheritdoc}
    */
   public function guessMimeType(string $path) : ?string {
-
+dump($path);
 dump($this->symfonyMimeTypes->guessMimeType($path));
 
     $extension = '';
