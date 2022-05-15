@@ -6,7 +6,6 @@ use Drupal\Core\File\FileSystemInterface;
 use Drupal\sophron\MimeMapManagerInterface;
 use FileEye\MimeMap\MappingException;
 use Symfony\Component\Mime\MimeTypeGuesserInterface;
-use Symfony\Component\Mime\MimeTypes;
 
 /**
  * Makes possible to guess the MIME type of a file using its extension.
@@ -27,8 +26,6 @@ class SophronMimeTypeGuesser implements MimeTypeGuesserInterface {
    */
   protected $fileSystem;
 
-  protected $symfonyMimeTypes;
-
   /**
    * Constructs a SophronMimeTypeGuesser object.
    *
@@ -40,16 +37,12 @@ class SophronMimeTypeGuesser implements MimeTypeGuesserInterface {
   public function __construct(MimeMapManagerInterface $mime_map_manager, FileSystemInterface $file_system) {
     $this->mimeMapManager = $mime_map_manager;
     $this->fileSystem = $file_system;
-    $this->symfonyMimeTypes =  new MimeTypes();
   }
 
   /**
    * {@inheritdoc}
    */
   public function guessMimeType(string $path) : ?string {
-//throw new \RuntimeException($path);
-//dump($this->symfonyMimeTypes->guessMimeType($path));
-
     $extension = '';
     $file_parts = explode('.', $this->fileSystem->basename($path));
 
