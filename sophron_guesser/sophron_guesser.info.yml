@@ -1,5 +1,5 @@
 type: module
-core_version_requirement: ^9.2
+core_version_requirement: ^10
 name: Sophron guesser
 description: 'Replaces Drupal core MIME type extension-based guesser with Sophron.'
 dependencies:
